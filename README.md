@@ -1,118 +1,165 @@
-# Stellar Notes DApp
+# DocuPay Ledger 📄
 
-**Stellar Notes DApp** - Blockchain-Based Decentralized Note-Taking System
+> On-chain employee document and payroll verification for SMEs.
 
-## Project Description
+---
 
-Stellar Notes DApp is a decentralized smart contract solution built on the Stellar blockchain using Soroban SDK. It provides a secure, immutable platform for managing personal notes directly on the blockchain. The contract ensures that your data is stored transparently and is only manageable through predefined smart contract functions, eliminating reliance on centralized database providers.
+## Problem
 
-The system allows users to create, view, and delete notes, leveraging the efficiency and security of the Stellar network. Each note is uniquely identified and stored within the contract's instance storage, ensuring data persistence and reliability.
+An HR officer in a small business in the Philippines manually manages employee contracts and payroll records, causing delays, document tampering risks, and salary disputes when employees cannot verify their payslips or payment status.
 
-## Project Vision
+---
 
-Our vision is to revolutionize personal productivity in the digital age by:
+## Project Description (Solution)
 
-- **Decentralizing Data**: Moving note-taking from centralized servers to a global, distributed blockchain
-- **Ensuring Ownership**: Empowering users to have complete control and ownership over their digital thoughts and information
-- **Guaranteeing Immutability**: Providing a permanent, tamper-proof record of notes that cannot be altered or deleted by third parties
-- **Enhancing Privacy**: Leveraging blockchain security to protect personal information from unauthorized access
-- **Building Trustless Systems**: Creating a platform where data integrity is guaranteed by code, not by company promises
+DocuPay Ledger allows HR staff to register employee document hashes on-chain and mark payroll records as paid using Soroban smart contracts. Employees can instantly verify that their documents and salary records are authentic, using Stellar’s fast, low-cost, and transparent blockchain.
 
-We envision a future where digital information is truly personal and sovereign, empowering individuals with complete autonomy over their digital assets.
+---
 
-## Key Features
+## Stellar Features Used
 
-### 1. **Simple Note Creation**
+| Feature | Purpose |
+|--------|--------|
+| Soroban smart contracts | Store document records and payroll status |
+| USDC/XLM references | Represent payroll transactions |
+| Trustlines | Enable asset support for future payroll integration |
+| On-chain storage | Tamper-proof document verification |
 
-- Create notes with just one function call
-- Specify title and content for each note
-- Automated ID generation for unique identification
-- Persistent storage on the Stellar blockchain
+---
 
-### 2. **Efficient Data Retrieval**
+## Timeline
 
-- Fetch all stored notes in a single call
-- Structured data representation for easy frontend integration
-- Quick access to your entire note collection
-- Real-time synchronization with the blockchain state
+| Phase | Description |
+|------|------------|
+| Day 1 | Smart contract design and data structure |
+| Day 2 | Implement upload_doc and pay_salary |
+| Day 3 | Testing and debugging |
+| Day 4 | Deployment to Stellar testnet |
+| Day 5 | README and demo preparation |
 
-### 3. **Secure Deletion**
+---
 
-- Remove specific notes using their unique IDs
-- Permanent removal from the contract storage
-- Clean and efficient storage management
-- Immediate update of the note list after deletion
+## Vision and Purpose
 
-### 4. **Transparency and Security**
+DocuPay Ledger solves a real-world problem faced by SMEs that lack proper HR systems.
 
-- View all note activities on the blockchain
-- Blockchain-based verification of all storage actions
-- Immutable records of note creation and deletion
-- Protected against unauthorized modifications
+By moving document verification and payroll records on-chain:
+- HR staff reduce disputes and manual work  
+- Employees gain verifiable proof of documents and salary  
+- Businesses improve trust and transparency  
+- Systems become tamper-resistant and auditable  
 
-### 5. **Stellar Network Integration**
+---
 
-- Leverages the high speed and low cost of Stellar
-- Built using the modern Soroban Smart Contract SDK
-- Scalable architecture for growing note collections
-- Interoperable with other Stellar-based services
+## Prerequisites
 
-## Contract Details
+- Rust (latest stable)
+- Stellar CLI
+- Stellar testnet account
 
-- Contract Address: CBLU4IUASQ4WUMOXBFLZRSBBLILGOH33GS4LUPKFBCCCMJCDQNMF7G2M
-  (Screenshot has been removed)
+---
+
+## Build
+
+(( stellar contract build --manifest-path contracts/bootcamp_project/Cargo.toml ))
+
+Output:
+(( target/wasm32v1-none/release/docupay_ledger.wasm ))
+
+---
+
+## Test
+
+```bash
+cargo test
+```
+---
+
+## Deploy to Testnet
+
+```bash
+stellar contract deploy \
+  --wasm target/wasm32v1-none/release/docupay_ledger.wasm \
+  --source stellar-ide-default \
+  --network testnet
+```
+
+---
+
+## CLI Usage Examples
+
+### Upload employee document
+
+```bash
+stellar contract invoke \
+  --id <contract_id> \
+  --source stellar-ide-default \
+  --network testnet \
+  --fn upload_doc \
+  -- \
+  --employee <employee_address> \
+  --doc_hash doc1
+```
+
+### Mark salary as paid
+
+```bash
+stellar contract invoke \
+  --id <contract_id> \
+  --source stellar-ide-default \
+  --network testnet \
+  --fn pay_salary \
+  -- \
+  --id 0
+```
+
+### Get employee record
+
+```bash
+stellar contract invoke \
+  --id <contract_id> \
+  --network testnet \
+  --fn get_record \
+  -- \
+  --id 0
+```
+
+---
+
+## Project Structure
+
+```bash
+docupay_ledger/
+├── Cargo.toml
+├── README.md
+├── src/
+│   ├── lib.rs
+│   └── test.rs
+```
+
+---
+
+## Deployed Contract Details
+
+Transaction:
+https://stellar.expert/explorer/testnet/tx/493f1a44d06b59754488200eaa5900ba2c15bc14620c0f42cbc5fff6ad3bb9a8
+
+Contract:
+https://lab.stellar.org/r/testnet/contract/CBBHKQO7DTI5CHAGBMUVULZRCZJWPXFKP5IITIKHDESBF5CRJ6NKDPAGP
+
+---
 
 ## Future Scope
 
-### Short-Term Enhancements
-
-1. **Note Encryption**: Support for end-to-end encryption of note content for enhanced privacy
-2. **Category Management**: Add tags and categories to organize notes efficiently
-3. **Rich Text Support**: Extend support beyond plain text to include Markdown and formatted content
-4. **Search Functionality**: Implement advanced search filters for large note collections
-
-### Medium-Term Development
-
-5. **Collaborative Notes**: Implement multi-signature requirements for shared or collaborative note-taking
-   - Shared access for multiple addresses
-   - Permission-based editing and viewing
-   - Version history tracking
-6. **Notification System**: Off-chain bridge to alert users of new updates or shared notes
-7. **Asset Attachment**: Capability to attach digital assets or tokens to specific notes
-8. **Inter-Contract Integration**: Allow other smart contracts to interact with and store data in the notes contract
-
-### Long-Term Vision
-
-9. **Cross-Chain Synchronization**: Extend note storage to multiple blockchain networks
-10. **Decentralized UI Hosting**: Host the frontend on IPFS or similar decentralized platforms
-11. **AI-Powered Summarization**: Optional integration with AI to help users summarize their notes
-12. **Privacy Layers**: Implement zero-knowledge proofs for completely private note content
-13. **DAO Governance**: Community-driven protocol improvements and feature prioritization
-14. **Identity Management**: Integration with decentralized identity (DID) systems for user management
-
-### Enterprise Features
-
-15. **Corporate Documentation**: Adapt the system for secure corporate record-keeping
-16. **Immutable Logging**: Create time-locked logs for audit purposes
-17. **Automated Reporting**: Automatic note triggers for periodic reporting
-18. **Multi-Language Support**: Expand accessibility with internationalization
+- HR-only authentication system  
+- Real USDC payroll integration  
+- Employee wallet login  
+- PDF document hashing  
+- QR code verification  
+- Web-based HR dashboard  
 
 ---
 
-## Technical Requirements
+## License
 
-- Soroban SDK
-- Rust programming language
-- Stellar blockchain network
-
-## Getting Started
-
-Deploy the smart contract to Stellar's Soroban network and interact with it using the three main functions:
-
-- `create_note()` - Create a new note with a title and content
-- `get_notes()` - Retrieve all stored notes from the contract
-- `delete_note()` - Remove a specific note by its ID
-
----
-
-**Stellar Notes DApp** - Securing Your Thoughts on the Blockchain
+MIT License — free to use, modify, and deploy for educational purposes.
